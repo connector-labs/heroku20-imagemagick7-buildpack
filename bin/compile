@@ -21,7 +21,7 @@ echo "Building ImageMagick..."
 ./configure --with-heic=yes
 identify -list format | grep HEIC
 make
-make install
+sudo make install
 
 # Clean up
 cd /
