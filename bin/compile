@@ -13,20 +13,37 @@ mkdir -p ${INSTALL_DIR}
 # Install dependencies
 echo "Installing dependencies..."
 apt-get update
-apt install -y build-essential libltdl-dev libjpeg-dev libpng-dev \
-               libtiff-dev libwebp-dev libgif-dev libfreetype6-dev \
-               liblcms2-dev libxml2-dev ghostscript libheif-dev \
-               libheif1 libbmp-dev
+apt-get install -y build-essential cmake wget libltdl-dev libjpeg-dev \
+                   libpng-dev libtiff-dev libwebp-dev libgif-dev libfreetype6-dev \
+                   liblcms2-dev libxml2-dev ghostscript libbmp-dev \
+                   libglib2.0-dev libxml2-dev
+
+# Install CMake (required for building libheif)
+echo "Installing CMake..."
+wget https://cmake.org/files/v3.21/cmake-3.21.2-linux-x86_64.tar.gz
+tar -zxvf cmake-3.21.2-linux-x86_64.tar.gz -C /opt
+ln -s /opt/cmake-3.21.2-linux-x86_64/bin/cmake /usr/local/bin/cmake
+
+# Install libheif from source
+echo "Installing libheif..."
+cd /tmp
+git clone https://github.com/strukturag/libheif.git
+cd libheif
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
 
 # Clone the ImageMagick repository
 echo "Cloning ImageMagick repository..."
+cd /tmp
 git clone ${IMAGEMAGICK_REPO} /tmp/imagemagick
 cd /tmp/imagemagick
 
 # Configure ImageMagick with the correct flags for HEIC, WebP, and BMP support
 echo "Configuring ImageMagick with HEIC, WebP, and BMP support..."
-./configure --prefix=${INSTALL_DIR} --with-modules \
-            --enable-delegate-build --with-webp=yes
+./configure --prefix=${INSTALL_DIR} --with-modules --with-webp=yes --with-heic=yes
 
 # Build ImageMagick
 echo "Building ImageMagick..."
@@ -36,6 +53,7 @@ make install
 # Clean up
 cd /
 rm -rf /tmp/imagemagick
+rm -rf /tmp/libheif
 
 # Update environment variables to include local installation directories
 echo "Updating environment variables..."
