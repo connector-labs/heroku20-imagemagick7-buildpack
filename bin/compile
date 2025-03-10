@@ -35,8 +35,7 @@ echo "export PATH=${INSTALL_DIR}/bin:\$PATH" >> $BUILD_DIR/.profile
 echo "export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:\$LD_LIBRARY_PATH" >> $BUILD_DIR/.profile
 echo "export MAGICK_HOME=${INSTALL_DIR}" >> $BUILD_DIR/.profile
 
-# Configure dynamic linker run-time bindings
-ldconfig ${INSTALL_DIR}/lib
-
 # Verify the installation
+magick --version
+
 echo "ImageMagick installed successfully with HEIC support in user directory!"
