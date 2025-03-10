@@ -4,12 +4,18 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 
 IMAGEMAGICK_REPO="https://github.com/ImageMagick/ImageMagick.git"
-INSTALL_DIR="$HOME/imagemagick"
+INSTALL_DIR="$HOME/imagemagick"  # $HOME is user directory
+
+# Ensure the directory exists
+echo "Creating install directory at $INSTALL_DIR..."
+mkdir -p ${INSTALL_DIR}
 
 # Install dependencies
 echo "Installing dependencies..."
 apt-get update
-apt install -y build-essential libltdl-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libgif-dev libheif-dev libfreetype6-dev liblcms2-dev libxml2-dev ghostscript
+apt install -y build-essential libltdl-dev libjpeg-dev libpng-dev \
+               libtiff-dev libwebp-dev libgif-dev libheif-dev \
+               libfreetype6-dev liblcms2-dev libxml2-dev ghostscript
 
 # Clone the ImageMagick repository and checkout the desired version
 echo "Cloning ImageMagick repository..."
@@ -34,6 +40,9 @@ echo "Updating environment variables..."
 echo "export PATH=${INSTALL_DIR}/bin:\$PATH" >> $BUILD_DIR/.profile
 echo "export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:\$LD_LIBRARY_PATH" >> $BUILD_DIR/.profile
 echo "export MAGICK_HOME=${INSTALL_DIR}" >> $BUILD_DIR/.profile
+
+# Skip ldconfig since it's not needed in the current environment
+# ldconfig ${INSTALL_DIR}/lib
 
 # Verify the installation
 magick --version
