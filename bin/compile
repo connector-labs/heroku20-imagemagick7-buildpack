@@ -16,17 +16,17 @@ apt-get update
 apt install -y build-essential libltdl-dev libjpeg-dev libpng-dev \
                libtiff-dev libwebp-dev libgif-dev libfreetype6-dev \
                liblcms2-dev libxml2-dev ghostscript libheif-dev \
-               libheif1 libwebp-dev libbmp-dev
+               libheif1 libbmp-dev
 
 # Clone the ImageMagick repository
 echo "Cloning ImageMagick repository..."
 git clone ${IMAGEMAGICK_REPO} /tmp/imagemagick
 cd /tmp/imagemagick
 
-# Configure ImageMagick with necessary options
+# Configure ImageMagick with the correct flags for HEIC, WebP, and BMP support
 echo "Configuring ImageMagick with HEIC, WebP, and BMP support..."
-./configure --prefix=${INSTALL_DIR} --with-heic=yes --with-modules \
-            --with-webp=yes --with-bmp=yes --enable-delegate-build
+./configure --prefix=${INSTALL_DIR} --with-modules \
+            --enable-delegate-build --with-webp=yes
 
 # Build ImageMagick
 echo "Building ImageMagick..."
@@ -51,7 +51,7 @@ source $BUILD_DIR/.profile
 echo "Verifying installation..."
 magick --version
 
-# Check if HEIC, WebP, BMP are supported
+# Check if HEIC, WebP, and BMP are supported
 echo "Verifying supported formats..."
 identify -list format | grep -E "HEIC|WEBP|BMP"
 
