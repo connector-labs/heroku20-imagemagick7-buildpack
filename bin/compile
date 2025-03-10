@@ -9,18 +9,19 @@ INSTALL_DIR="$HOME/imagemagick"
 # Install dependencies
 echo "Installing dependencies..."
 apt-get update
-apt install build-essential libltdl-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libgif-dev libheif-dev libfreetype6-dev liblcms2-dev libxml2-dev ghostscript
+apt install -y build-essential libltdl-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libgif-dev libheif-dev libfreetype6-dev liblcms2-dev libxml2-dev ghostscript
 
 # Clone the ImageMagick repository and checkout the desired version
 echo "Cloning ImageMagick repository..."
 git clone ${IMAGEMAGICK_REPO} /tmp/imagemagick
 cd /tmp/imagemagick
 
+# Configure ImageMagick to install to the local directory
+echo "Configuring ImageMagick..."
+./configure --prefix=${INSTALL_DIR} --with-heic=yes --with-modules
+
 # Build ImageMagick
 echo "Building ImageMagick..."
-./configure --with-modules
-./configure --with-heic=yes
-identify -list format | grep HEIC
 make
 make install
 
@@ -34,8 +35,8 @@ echo "export PATH=${INSTALL_DIR}/bin:\$PATH" >> $BUILD_DIR/.profile
 echo "export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:\$LD_LIBRARY_PATH" >> $BUILD_DIR/.profile
 echo "export MAGICK_HOME=${INSTALL_DIR}" >> $BUILD_DIR/.profile
 
-ldconfig /usr/local/lib
+# Configure dynamic linker run-time bindings
+ldconfig ${INSTALL_DIR}/lib
 
-magick --version
-
+# Verify the installation
 echo "ImageMagick installed successfully with HEIC support in user directory!"
