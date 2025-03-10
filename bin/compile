@@ -14,8 +14,8 @@ mkdir -p ${INSTALL_DIR}
 echo "Installing dependencies..."
 apt-get update
 apt install -y build-essential libltdl-dev libjpeg-dev libpng-dev \
-               libtiff-dev libwebp-dev libgif-dev libheif-dev \
-               libfreetype6-dev liblcms2-dev libxml2-dev ghostscript
+               libtiff-dev libwebp-dev libgif-dev libfreetype6-dev \
+               liblcms2-dev libxml2-dev ghostscript libheif-dev libbmp-dev
 
 # Clone the ImageMagick repository and checkout the desired version
 echo "Cloning ImageMagick repository..."
@@ -24,7 +24,8 @@ cd /tmp/imagemagick
 
 # Configure ImageMagick to install to the local directory
 echo "Configuring ImageMagick..."
-./configure --prefix=${INSTALL_DIR} --with-heic=yes --with-modules
+./configure --prefix=${INSTALL_DIR} --with-heic=yes --with-modules \
+            --enable-delegate-build --with-webp=yes --with-bmp=yes --with-heif=yes
 
 # Build ImageMagick
 echo "Building ImageMagick..."
@@ -49,4 +50,4 @@ source $BUILD_DIR/.profile
 echo "Verifying installation..."
 magick --version
 
-echo "ImageMagick installed successfully with HEIC support in /app/imagemagick!"
+echo "ImageMagick installed successfully with HEIC, WebP, and BMP support in /app/imagemagick!"
