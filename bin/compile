@@ -1,0 +1,16 @@
+#!/bin/bash
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+# You can customize this URL to download the specific version of ImageMagick 7.1
+IMAGEMAGICK_VERSION="7.1.0-4"
+IMAGEMAGICK_DOWNLOAD_URL="https://github.com/ImageMagick/ImageMagick/releases/download/${IMAGEMAGICK_VERSION}/ImageMagick-${IMAGEMAGICK_VERSION}-linux-x86_64.tar.gz"
+
+echo "Downloading ImageMagick version ${IMAGEMAGICK_VERSION}..."
+
+# Download ImageMagick and extract it
+curl -L ${IMAGEMAGICK_DOWNLOAD_URL} | tar xz -C /usr/local/
+
+echo "ImageMagick ${IMAGEMAGICK_VERSION} installed successfully!"
+
