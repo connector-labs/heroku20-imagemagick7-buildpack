@@ -4,7 +4,7 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 
 IMAGEMAGICK_REPO="https://github.com/ImageMagick/ImageMagick.git"
-INSTALL_DIR="$HOME/imagemagick"  # $HOME is user directory
+INSTALL_DIR="/app/imagemagick"  # Correct install path inside the app container
 
 # Ensure the directory exists
 echo "Creating install directory at $INSTALL_DIR..."
@@ -41,10 +41,12 @@ echo "export PATH=${INSTALL_DIR}/bin:\$PATH" >> $BUILD_DIR/.profile
 echo "export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:\$LD_LIBRARY_PATH" >> $BUILD_DIR/.profile
 echo "export MAGICK_HOME=${INSTALL_DIR}" >> $BUILD_DIR/.profile
 
-# Skip ldconfig since it's not needed in the current environment
-# ldconfig ${INSTALL_DIR}/lib
+# Ensure .profile is sourced to apply changes
+echo "Sourcing .profile to apply environment changes..."
+source $BUILD_DIR/.profile
 
-# Verify the installation
+# Verify the installation by checking the magick version
+echo "Verifying installation..."
 magick --version
 
-echo "ImageMagick installed successfully with HEIC support in user directory!"
+echo "ImageMagick installed successfully with HEIC support in /app/imagemagick!"
