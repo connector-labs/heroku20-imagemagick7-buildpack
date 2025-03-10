@@ -3,14 +3,32 @@
 BUILD_DIR=$1
 CACHE_DIR=$2
 
-# You can customize this URL to download the specific version of ImageMagick 7.1
-IMAGEMAGICK_VERSION="7.1.0-4"
-IMAGEMAGICK_DOWNLOAD_URL="https://github.com/ImageMagick/ImageMagick/releases/download/${IMAGEMAGICK_VERSION}/ImageMagick-${IMAGEMAGICK_VERSION}-linux-x86_64.tar.gz"
+IMAGEMAGICK_REPO="https://github.com/ImageMagick/ImageMagick.git"
 
-echo "Downloading ImageMagick version ${IMAGEMAGICK_VERSION}..."
+# Install dependencies
+echo "Installing dependencies..."
+apt-get update
+apt install build-essential libltdl-dev libjpeg-dev libpng-dev libtiff-dev libwebp-dev libgif-dev libheif-dev libfreetype6-dev liblcms2-dev libxml2-dev ghostscript
 
-# Download ImageMagick and extract it
-curl -L ${IMAGEMAGICK_DOWNLOAD_URL} | tar xz -C /usr/local/
+# Clone the ImageMagick repository and checkout the desired version
+echo "Cloning ImageMagick repository..."
+git clone ${IMAGEMAGICK_REPO} /tmp/imagemagick
+cd /tmp/imagemagick
+
+# Build ImageMagick
+echo "Building ImageMagick..."
+./configure --with-modules
+./configure --with-heic=yes
+identify -list format | grep HEIC
+make
+make install
+
+# Clean up
+cd /
+rm -rf /tmp/imagemagick
+
+sudo ldconfig /usr/local/lib
+
+magick --version
 
 echo "ImageMagick ${IMAGEMAGICK_VERSION} installed successfully!"
-
