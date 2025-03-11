@@ -4,8 +4,7 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 
 # Install dependencies
-echo "Installing ffmpeg and dependencies..."
-apt-get update
-apt-get install -y libheif-dev libwebp-dev ffmpeg
-
-echo "Ffmpeg installed"
+echo "Installing FFMPEG..."
+sudo apt-get update
+sudo apt-get install -y libheif-dev libwebp-dev ffmpeg
+echo "FFMPEG installed"
