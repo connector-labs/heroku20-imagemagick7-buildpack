@@ -3,57 +3,9 @@
 BUILD_DIR=$1
 CACHE_DIR=$2
 
-IMAGEMAGICK_REPO="https://github.com/ImageMagick/ImageMagick.git"
-INSTALL_DIR="/app/imagemagick"  # Correct install path inside the app container
-
-# Ensure the directory exists
-echo "Creating install directory at $INSTALL_DIR..."
-mkdir -p ${INSTALL_DIR}
-
 # Install dependencies
-echo "Installing dependencies..."
+echo "Installing ffmpeg and dependencies..."
 apt-get update
-apt-get install -y build-essential cmake wget libltdl-dev libjpeg-dev \
-                   libpng-dev libtiff-dev libwebp-dev libgif-dev libfreetype6-dev \
-                   liblcms2-dev libxml2-dev ghostscript \
-                   libglib2.0-dev libxml2-dev
+apt-get install -y libheif-dev libwebp-dev ffmpeg
 
-# Clone the ImageMagick repository
-echo "Cloning ImageMagick repository..."
-cd /tmp
-git clone ${IMAGEMAGICK_REPO} /tmp/imagemagick
-cd /tmp/imagemagick
-
-# Configure ImageMagick with the correct flags for HEIC, WebP, and BMP support
-echo "Configuring ImageMagick with HEIC, WebP, and BMP support..."
-./configure --prefix=${INSTALL_DIR} --with-modules --with-webp=yes --with-heic=yes
-
-# Build ImageMagick
-echo "Building ImageMagick..."
-make
-make install
-
-# Clean up
-cd /
-rm -rf /tmp/imagemagick
-
-# Update environment variables to include local installation directories
-echo "Updating environment variables..."
-echo "export PATH=${INSTALL_DIR}/bin:\$PATH" >> $BUILD_DIR/.profile
-echo "export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:\$LD_LIBRARY_PATH" >> $BUILD_DIR/.profile
-echo "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> $BUILD_DIR/.profile
-echo "export MAGICK_HOME=${INSTALL_DIR}" >> $BUILD_DIR/.profile
-
-# Ensure .profile is sourced to apply changes
-echo "Sourcing .profile to apply environment changes..."
-source $BUILD_DIR/.profile
-
-# Verify the installation by checking the magick version
-echo "Verifying installation..."
-magick --version
-
-# Check if HEIC, WebP, and BMP are supported
-echo "Verifying supported formats..."
-identify -list format | grep -E "HEIC|WEBP|BMP"
-
-echo "ImageMagick installed successfully with HEIC, WebP, and BMP support in /app/imagemagick!"
+echo "Ffmpeg installed"
