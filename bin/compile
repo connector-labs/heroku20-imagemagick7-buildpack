@@ -1,9 +1,24 @@
 #!/bin/bash
 
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+# Create a local directory for FFmpeg
+FFMPEG_DIR=$BUILD_DIR/ffmpeg
+
 # Download FFmpeg precompiled binaries
 echo "Downloading FFmpeg binaries..."
-wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz
-tar -xvf ffmpeg-release-i686-static.tar.xz
-mv ffmpeg-*/ffmpeg /usr/local/bin/
-rm -rf ffmpeg-*
-echo "FFmpeg installed"
+mkdir -p $FFMPEG_DIR
+wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz -P $FFMPEG_DIR
+
+# Extract FFmpeg binaries
+echo "Extracting FFmpeg..."
+tar -xvf $FFMPEG_DIR/ffmpeg-release-i686-static.tar.xz -C $FFMPEG_DIR
+
+# Add FFmpeg to the PATH
+echo "Adding FFmpeg to the PATH..."
+export PATH=$FFMPEG_DIR/ffmpeg-*/:$PATH
+
+# Check if FFmpeg was successfully installed
+echo "FFmpeg installation complete. Version:"
+ffmpeg -version
