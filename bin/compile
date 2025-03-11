@@ -15,6 +15,10 @@ wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz
 echo "Extracting FFmpeg..."
 tar -xvf $FFMPEG_DIR/ffmpeg-release-i686-static.tar.xz -C $FFMPEG_DIR
 
+# List the extracted contents to confirm
+echo "Listing extracted files:"
+ls -l $FFMPEG_DIR
+
 # Add FFmpeg to the PATH for this session
 echo "Adding FFmpeg to the PATH..."
 export PATH=$FFMPEG_DIR/ffmpeg-*/:$PATH
