@@ -15,10 +15,14 @@ wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz
 echo "Extracting FFmpeg..."
 tar -xvf $FFMPEG_DIR/ffmpeg-release-i686-static.tar.xz -C $FFMPEG_DIR
 
-# Add FFmpeg to the PATH
+# Add FFmpeg to the PATH for this session
 echo "Adding FFmpeg to the PATH..."
 export PATH=$FFMPEG_DIR/ffmpeg-*/:$PATH
 
-# Check if FFmpeg was successfully installed
-echo "FFmpeg installation complete. Version:"
+# Check if FFmpeg is found by the PATH
+echo "Checking FFmpeg installation..."
+which ffmpeg
+
+# Verify FFmpeg is working by printing its version
+echo "FFmpeg version:"
 ffmpeg -version
