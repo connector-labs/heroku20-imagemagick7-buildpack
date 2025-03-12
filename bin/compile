@@ -3,6 +3,8 @@
 BUILD_DIR=$1
 CACHE_DIR=$2
 
+APP_CHECKOUT_DIR=/app
+
 # Create a local directory for FFmpeg
 FFMPEG_DIR=$BUILD_DIR/ffmpeg
 
@@ -29,6 +31,17 @@ echo "Current PATH: $PATH"
 # Check if ffmpeg is found by which
 echo "Checking if ffmpeg is in PATH using 'which ffmpeg'..."
 which ffmpeg
+
+#
+# Environment
+#
+# Add an export of PATH which includes our compile dir, etc.
+echo "-----> Adding PATH environment"
+mkdir -p "$APP_CHECKOUT_DIR"/.profile.d
+cat > "$APP_CHECKOUT_DIR"/.profile.d/ffmpeg-path.sh <<EOF
+  #!/bin/sh
+  export PATH=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static:$PATH
+EOF
 
 # Use full path to check ffmpeg functionality
 FFMPEG_BIN=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static/ffmpeg
