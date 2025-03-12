@@ -1,12 +1,15 @@
 #!/bin/bash
 
-BUILD_DIR=$1
+# Get the path to dir one above this file.
+BUILDPACK_DIR=$(cd -P -- "$(dirname -- "$0")" && cd .. && pwd -P)
+# Get the directory our app is checked out in (the "BUILD_DIR"), passed by Heroku
+APP_DIR=$1
 CACHE_DIR=$2
 
-APP_CHECKOUT_DIR=/app
+echo "APP_DIR = $APP_DIR"
 
 # Create a local directory for FFmpeg
-FFMPEG_DIR=$BUILD_DIR/ffmpeg
+FFMPEG_DIR=$APP_DIR/ffmpeg
 
 # Download FFmpeg precompiled binaries
 echo "Downloading FFmpeg binaries..."
@@ -21,27 +24,23 @@ tar -xvf $FFMPEG_DIR/ffmpeg-release-i686-static.tar.xz -C $FFMPEG_DIR
 echo "Listing extracted files:"
 ls -l $FFMPEG_DIR/ffmpeg-7.0.2-i686-static
 
-# Add FFmpeg to the PATH for this session
-echo "Adding FFmpeg to PATH..."
-export PATH=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static:$PATH
-
-# Debug the PATH to check if the folder was added
+# Add an export of PATH which includes our compile dir, etc.
+echo "-----> Adding Ffmpeg to PATH"
 echo "Current PATH: $PATH"
+export PATH=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static:$PATH
+echo "NEW PATH: $PATH"
+
+mkdir -p "$APP_DIR"/.profile.d
+cat > "$APP_DIR"/.profile.d/ffmpeg-path.sh <<EOF
+  #!/bin/sh
+  export PATH=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static:$PATH
+EOF
+echo "Listing $APP_DIR/.profile.d"
+ls -l $APP_DIR/.profile.d
 
 # Check if ffmpeg is found by which
 echo "Checking if ffmpeg is in PATH using 'which ffmpeg'..."
 which ffmpeg
-
-#
-# Environment
-#
-# Add an export of PATH which includes our compile dir, etc.
-echo "-----> Adding PATH environment"
-mkdir -p "$APP_CHECKOUT_DIR"/.profile.d
-cat > "$APP_CHECKOUT_DIR"/.profile.d/ffmpeg-path.sh <<EOF
-  #!/bin/sh
-  export PATH=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static:$PATH
-EOF
 
 # Use full path to check ffmpeg functionality
 FFMPEG_BIN=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static/ffmpeg
