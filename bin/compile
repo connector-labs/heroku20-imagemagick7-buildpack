@@ -35,6 +35,6 @@ echo "Checking if ffmpeg is in PATH using 'which ffmpeg'..."
 which ffmpeg
 
 # Use full path to check ffmpeg functionality
-FFMPEG_BIN=/app/ffmpeg/ffmpeg-7.0.2-i686-static/ffmpeg
-echo "Check Ffmpeg version..."
+FFMPEG_BIN=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static/ffmpeg
+echo "Check ffmpeg version..."
 $FFMPEG_BIN -version
