@@ -17,17 +17,20 @@ tar -xvf $FFMPEG_DIR/ffmpeg-release-i686-static.tar.xz -C $FFMPEG_DIR
 
 # List extracted files for debug
 echo "Listing extracted files:"
-ls -l $FFMPEG_DIR
+ls -l $FFMPEG_DIR/ffmpeg-7.0.2-i686-static
 
 # Add FFmpeg to the PATH for this session
-FFMPEG_BIN=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static/ffmpeg
 echo "Adding FFmpeg to PATH..."
 export PATH=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static:$PATH
 
-# Verify if FFmpeg is found in PATH
-echo "Checking FFmpeg installation..."
+# Debug the PATH to check if the folder was added
+echo "Current PATH: $PATH"
+
+# Check if ffmpeg is found by which
+echo "Checking if ffmpeg is in PATH using 'which ffmpeg'..."
 which ffmpeg
 
-# Verify FFmpeg is working by printing its version
-echo "FFmpeg version:"
+# Use full path to check ffmpeg functionality
+FFMPEG_BIN=$FFMPEG_DIR/ffmpeg-7.0.2-i686-static/ffmpeg
+echo "Using full path to check FFmpeg version..."
 $FFMPEG_BIN -version
